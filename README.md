@@ -43,6 +43,10 @@ Filtering
   ) {
     face
     name
+    tokenID
+    owner {
+      id 
+    }
   }
 }
 ```
@@ -51,8 +55,8 @@ Full text search
 
 ```graphql
 {
-  tokenSearch(
-    text: "'#334'"
+  doodleSearch(
+    text: "'mustache'"
   ) {
     id
     name
