@@ -1,32 +1,28 @@
-specVersion: 0.0.1
+specVersion: 0.0.4
+description: A subgraph for querying Doodles NFT contract
+repository: https://github.com/jinsley8/doodles-subgraph-api
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: Token
     network: mainnet
     source:
       address: "0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e"
       abi: Token
+      startBlock: 13430097
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
-        - OwnershipTransferred
-        - Transfer
+        - Token
+        - User
       abis:
         - name: Token
           file: ./abis/Token.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/mapping.ts
+features: [fullTextSearch, ipfsOnEthereumContracts]
