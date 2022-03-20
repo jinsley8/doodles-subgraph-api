@@ -27,3 +27,4 @@ dataSources:
       file: ./src/mapping.ts
 features:
   - fullTextSearch
+  - ipfsOnEthereumContracts
