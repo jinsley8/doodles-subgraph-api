@@ -1,4 +1,4 @@
-import { ipfs, json, JSONValue } from '@graphprotocol/graph-ts';
+import { ipfs, json } from '@graphprotocol/graph-ts';
 
 import {
   Transfer as TransferEvent,
@@ -9,7 +9,6 @@ import {
   Token, User
 } from "../generated/schema"
 
-
 export function handleTransfer(event: TransferEvent): void {
 
   const ipfsHash = "QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS";
@@ -19,7 +18,7 @@ export function handleTransfer(event: TransferEvent): void {
   if (!token) {
     token = new Token(event.params.tokenId.toString());
     token.tokenID = event.params.tokenId;
-    token.tokenURI = "/" + event.params.tokenId.toString();
+    token.tokenURI = "/" + event.params.tokenId.toString()
 
     let metadata = ipfs.cat(ipfsHash + token.tokenURI);
 
@@ -34,49 +33,25 @@ export function handleTransfer(event: TransferEvent): void {
           token.name = name.toString()
           token.image = image.toString()
           token.description = description.toString()
-          token.ipfsURI = 'ipfs.io/ipfs/' + ipfsHash + token.tokenURI
+          token.ipfsURI = "ipfs.io/ipfs/" + ipfsHash + token.tokenURI
         }
 
-        let attributes:JSONValue[]
-        let atts = value.get('attributes')
-        if (atts) {
-          attributes = atts.toArray()
-        }
+        const attributes = value.get('attributes')
 
-        for (let i = 0; i < attributes.length; i++) {
-          let item = attributes[i].toObject()
-          let trait:string
-          let t = item.get('trait_type')
-          if (t) {
-            t.toString()
-          }
-          let value:string
-          let v = item.get('value')
-          if (v) {
-            value = v.toString()
-          }
-          if (trait == "face") {
-            token.face = value
-          }
-
-          if (trait == "hair") {
-            token.hair = value
-          }
-
-          if (trait == "body") {
-            token.body = value
-          }
-
-          if (trait == "background") {
-            token.background = value
-          }
-
-          if (trait == "head") {
-            token.head = value
-          }
-
-          if (trait == "piercing") {
-            token.piercing = value
+        if (attributes) {
+          const arr = attributes.toArray()
+          for (let i = 0; i < arr.length; i++) {
+            const obj = arr[i].toObject()
+            const traitType = obj.get('trait_type')
+            const value = obj.get("value")
+            if (traitType && value) {
+              if (traitType.toString() == "face") token.face = value.toString()
+              if (traitType.toString() == "hair") token.hair = value.toString()
+              if (traitType.toString() == "body") token.body = value.toString()
+              if (traitType.toString() == "background") token.background = value.toString()
+              if (traitType.toString() == "head") token.head = value.toString()
+              if (traitType.toString() == "piercing") token.piercing = value.toString()
+            }
           }
         }
       }
